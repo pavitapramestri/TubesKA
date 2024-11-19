@@ -17,50 +17,54 @@ class Generate
         $username = "root",
         $password = ""
     ) {
-        $this->dbname = $dbname;
+        // Gunakan variabel lingkungan jika tersedia
+        $this->dbname = getenv('MYSQL_DB') ?: $dbname;
         $this->tablename = $tablename;
-        $this->servername = $servername;
-        $this->username = $username;
-        $this->password = $password;
+        $this->servername = getenv('MYSQL_HOST') ?: $servername;
+        $this->username = getenv('MYSQL_USER') ?: $username;
+        $this->password = getenv('MYSQL_PASSWORD') ?: $password;
 
         // create connection
-        $this->con = mysqli_connect($servername, $username, $password);
+        $this->con = mysqli_connect($this->servername, $this->username, $this->password);
 
         // check connection
         if (!$this->con) {
             die("Connection Failed: " . mysqli_connect_error());
         }
 
-        // Query
-        $sql = "CREATE DATABASE IF NOT EXISTS $dbname";
+        // Query untuk membuat database jika belum ada
+        $sql = "CREATE DATABASE IF NOT EXISTS $this->dbname";
 
         // Execute query
         if (mysqli_query($this->con, $sql)) {
-            $this->con = mysqli_connect($servername, $username, $password, $dbname);
+            $this->con = mysqli_connect($this->servername, $this->username, $this->password, $this->dbname);
 
-            // Create table
-            $sql = "CREATE TABLE IF NOT EXISTS $tablename
-            (id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            product_name VARCHAR(25) NOT NULL,
-            product_price FLOAT,
-            product_image VARCHAR(100)
+            // Query untuk membuat tabel jika belum ada
+            $sql = "CREATE TABLE IF NOT EXISTS $this->tablename (
+                id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                product_name VARCHAR(25) NOT NULL,
+                product_price FLOAT,
+                product_image VARCHAR(100)
             );";
 
             if (!mysqli_query($this->con, $sql)) {
-                echo "Error create table:" . mysqli_error($this->con);
+                echo "Error creating table: " . mysqli_error($this->con);
             }
         } else {
-            return false;
+            die("Error creating database: " . mysqli_error($this->con));
         }
     }
 
     // Get product from database
-    public function getData(){
+    public function getData()
+    {
         $sql = "SELECT * FROM $this->tablename";
         $result = mysqli_query($this->con, $sql);
 
-        if(mysqli_num_rows($result) > 0){
+        if (mysqli_num_rows($result) > 0) {
             return $result;
+        } else {
+            return [];
         }
     }
 }
