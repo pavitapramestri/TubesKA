@@ -61,7 +61,7 @@ if (isset($_POST['add'])) {
     <!-- Style CSS -->
     <link rel="stylesheet" href="style.css">
 
-    <title>4S Moto Shop</title>
+    <title>Toko Mulia Jaya</title>
 </head>
 
 <body>
