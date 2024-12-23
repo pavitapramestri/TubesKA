@@ -1,8 +1,8 @@
 <?php
 session_start();
-if ($_SESSION['status'] != "login") {
-    header("location:login.php?pesan=belum_login");
-}
+// if ($_SESSION['status'] != "login") {
+//     header("location:login.php?pesan=belum_login");
+// }
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +28,9 @@ if ($_SESSION['status'] != "login") {
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <a class="navbar-brand" href="#"><?= $_SESSION['username']; ?></a>
+            <a class="navbar-brand text-light px-5" href="#" style="text-align:
+            left; color: #ff5722;">
+            </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -36,7 +38,7 @@ if ($_SESSION['status'] != "login") {
                 <div class="navbar-nav">
                     <a class="nav-link" href="dashboard.php">Dashboard <span class="sr-only">(current)</span></a>
                     <a class="nav-link" href="produk.php">Product</a>
-                    <a class="nav-link" href="user.php">User</a>
+                    <!-- <a class="nav-link" href="user.php">User</a> -->
                     <a class="nav-link" href="logout.php">Logout</a>
                 </div>
             </div>

@@ -12,7 +12,6 @@ function card($productname, $productimg, $productprice, $productid)
                 </div>
                 <div class=\"card-body\">
                     <h5 class=\"card-title\">$productname</h5>
-                    <p class=\"card-text\">Some quick example text to build on the card.</p>
                     <h5 class=\"price\">Rp.$productprice</h5>
                     <button type=\"submit\" name=\"add\" class=\"btn btn-success my-3\">Add to Cart <i class=\"fas fa-shopping-cart\"></i></button>
                     <input type=\"hidden\" name=\"product_id\" value=\"$productid\">

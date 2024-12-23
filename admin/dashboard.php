@@ -2,9 +2,9 @@
 
 <?php
 // session_start();
-if ($_SESSION['status'] != "login") {
-    header("location:login.php?pesan=belum_login");
-}
+// if ($_SESSION['status'] != "login") {
+//     header("location:login.php?pesan=belum_login");
+// }
 ?>
 
 <!-- <h4>Selamat datang, <?php echo $_SESSION['username']; ?>! anda telah login.</h4> -->
