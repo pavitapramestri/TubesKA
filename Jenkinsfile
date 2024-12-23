@@ -1,35 +1,52 @@
 pipeline {
     agent any
+
+    environment {
+        DOCKER_IMAGE = "4s-moto-shop:${env.BUILD_NUMBER}"
+        CONTAINER_PORT = "8085"
+    }
+
     stages {
-        stage('Checkout') {
+        stage('Build') {
             steps {
-                git branch: 'main', url: 'https://github.com/pavitapramestri/TubesKA.git'
+                echo 'Building the application...'
+                sh 'docker run --rm -v $(pwd):/app -w /app php:8.1-apache php -l index.php'
             }
         }
-        stage('Send Dockerfile to Ansible') {
+
+        stage('Test') {
             steps {
-                echo '....'
+                echo 'Running tests...'
+                sh 'docker run --rm -v $(pwd):/app -w /app php:8.1-apache phpunit tests'
             }
         }
-        stage('Build Docker Image') {
+
+        stage('Docker Build') {
             steps {
-                echo '....'
+                echo 'Building Docker image...'
+                sh '''
+                docker build -t $DOCKER_IMAGE .
+                docker push $DOCKER_IMAGE
+                '''
             }
         }
-        stage('Push Image to Docker Hub') {
+
+        stage('Run Container') {
             steps {
-                echo '....'
+                echo 'Running Docker container...'
+                sh '''
+                docker run -d -p $CONTAINER_PORT:80 --name 4s-moto-shop $DOCKER_IMAGE
+                '''
             }
         }
-        stage('Copy Files to Kubernetes') {
-            steps {
-                echo '....'
-            }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
         }
-        stage('Deploy to Kubernetes') {
-            steps {
-                echo '...'
-            }
+        failure {
+            echo 'Pipeline failed! Please check the logs.'
         }
     }
 }
