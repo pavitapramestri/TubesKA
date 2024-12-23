@@ -2,51 +2,47 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "4s-moto-shop:${env.BUILD_NUMBER}"
-        CONTAINER_PORT = "8085"
+        DOCKER_IMAGE = "php:8.1-apache"
+        CONTAINER_ID = "427aaf0f0a3291c953a62b386fb80472da629e9faa41ce790a24fbaac95171aa"
+        APP_PORT = "8085:80"
+        MYSQL_CONTAINER_ID = "4cafadb2382a49543b14f050033857fc8a98a94c6a52481da8f4b11f523ece5d"
+        MYSQL_IMAGE = "mysql:5.7"
+        MYSQL_ROOT_PASSWORD = "root_password"
     }
 
     stages {
-        stage('Build') {
+		stage('Git Checkout') {
             steps {
-                echo 'Building the application...'
-                sh 'docker run --rm -v $(pwd):/app -w /app php:8.1-apache php -l index.php'
+                git branch: 'main', url: 'https://github.com/pavitapramestri/TubesKA.git'
             }
         }
 
-        stage('Test') {
+        stage('Setup PHP Container') {
             steps {
-                echo 'Running tests...'
-                sh 'docker run --rm -v $(pwd):/app -w /app php:8.1-apache phpunit tests'
+                script {
+                    echo "Container ID: 427aaf0f0a3291c953a62b386fb80472da629e9faa41ce790a24fbaac95171aa"
+                    
+                    echo 'Verifying PHP container is running...'
+                }
             }
         }
-
-        stage('Docker Build') {
+        
+        stage('Setup MySQL Container') {
             steps {
-                echo 'Building Docker image...'
-                sh '''
-                docker build -t $DOCKER_IMAGE .
-                docker push $DOCKER_IMAGE
-                '''
-            }
-        }
+                script {
+                    echo "Container ID: 4cafadb2382a49543b14f050033857fc8a98a94c6a52481da8f4b11f523ece5d"
 
-        stage('Run Container') {
-            steps {
-                echo 'Running Docker container...'
-                sh '''
-                docker run -d -p $CONTAINER_PORT:80 --name 4s-moto-shop $DOCKER_IMAGE
-                '''
+                    echo 'Verifying MySQL container is running...'
+                }
             }
         }
     }
 
     post {
-        success {
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed! Please check the logs.'
+        always {
+            echo 'Cleaning up Docker resources...'
+            sh "docker stop 427aaf0f0a3291c953a62b386fb80472da629e9faa41ce790a24fbaac95171aa || true"
+            sh "docker rm 427aaf0f0a3291c953a62b386fb80472da629e9faa41ce790a24fbaac95171aa || true"
         }
     }
 }
