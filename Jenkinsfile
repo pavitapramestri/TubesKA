@@ -36,17 +36,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Connect MySQL Container') {
-            steps {
-                script {
-                    echo 'Running MySQL container...'
-                    sh "docker run -d --name 4s-moto-shop-mysql-1 \
-                       -e MYSQL_ROOT_PASSWORD=root_password \
-                       -e MYSQL_DATABASE=cart_db"
-                }
-            }
-        }
         
     }
 
