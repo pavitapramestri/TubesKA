@@ -46,6 +46,12 @@ pipeline {
         
 			sh "docker stop 4cafadb2382a49543b14f050033857fc8a98a94c6a52481da8f4b11f523ece5d || true"
             sh "docker rm 4cafadb2382a49543b14f050033857fc8a98a94c6a52481da8f4b11f523ece5d || true"
+
+			if (isUnix()) {
+    			sh 'nohup command &'
+			} else {
+    			bat 'start /b command'
+			}
 		}
     }
 }
