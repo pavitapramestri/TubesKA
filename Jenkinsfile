@@ -43,6 +43,9 @@ pipeline {
             echo 'Cleaning up Docker resources...'
             sh "docker stop 427aaf0f0a3291c953a62b386fb80472da629e9faa41ce790a24fbaac95171aa || true"
             sh "docker rm 427aaf0f0a3291c953a62b386fb80472da629e9faa41ce790a24fbaac95171aa || true"
-        }
+        
+			sh "docker stop 4cafadb2382a49543b14f050033857fc8a98a94c6a52481da8f4b11f523ece5d || true"
+            sh "docker rm 4cafadb2382a49543b14f050033857fc8a98a94c6a52481da8f4b11f523ece5d || true"
+		}
     }
 }
