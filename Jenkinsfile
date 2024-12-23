@@ -41,7 +41,6 @@ pipeline {
     post {
         always {
             echo 'Cleaning up Docker resources...'
-            sh "docker stop 427aaf0f0a3291c953a62b386fb80472da629e9faa41ce790a24fbaac95171aa || true"
             sh "docker rm 427aaf0f0a3291c953a62b386fb80472da629e9faa41ce790a24fbaac95171aa || true"
         }
     }
