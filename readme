@@ -1,0 +1,10 @@
+untuk akses database
+docker exec -it 4cafadb2382a49543b14f050033857fc8a98a94c6a52481da8f4b11f523ece5d bash
+mysql -u root -p
+root_password
+
+query
+show databases;
+use cart_db; //masuk database
+show tables; // nampilin tabel 
+select * from product; // menampilkan semua product

@@ -85,10 +85,10 @@ if (isset($_POST['remove'])) {
                             <h6>Amount Payable</h6>
                         </div>
                         <div class="col-md-6">
-                            <h6>$<?= $total; ?></h6>
+                            <h6>Rp.<?= $total; ?></h6>
                             <h6 class="text-success">FREE</h6>
                             <hr>
-                            <h6>$<?= $total; ?></h6>
+                            <h6>Rp.<?= $total; ?></h6>
                         </div>
                     </div>
                     <form action="proses.php" method="post" class="mb-3">
