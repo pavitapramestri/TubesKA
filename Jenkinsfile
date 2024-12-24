@@ -10,7 +10,7 @@ pipeline {
         MYSQL_ROOT_PASSWORD = "root_password"
         DOCKER_REGISTRY = "docker.io" // Sesuaikan dengan registry yang Anda gunakan
         DOCKER_USERNAME = "pavitapramestri" // Gantilah dengan username DockerHub Anda
-        DOCKER_PASSWORD = "dckr_pat_6aVNV474J3obq-gnWC2feZU4Hvw" // Gantilah dengan password atau token DockerHub Anda
+        DOCKER_PASSWORD = "pavitapramestri" // Gantilah dengan password atau token DockerHub Anda
     }
 
     stages {
