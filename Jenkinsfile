@@ -3,14 +3,14 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "4s-moto-shop"                
-        DOCKER_REGISTRY = 'https://index.docker.io/v1/'
+        DOCKER_REGISTRY = 'docker.io' 
         DOCKER_REPO = 'pavitapramestri/4s-moto-shop' 
         DOCKER_CREDENTIALS = 'pavitapramestri'      
         PHP_IMAGE = "php:8.1-apache"               
         APP_PORT = "8085:80"                       
         MYSQL_CONTAINER_ID = "4cafadb2382a49543b14f050033857fc8a98a94c6a52481da8f4b11f523ece5d" 
         MYSQL_IMAGE = "mysql:5.7"                  
-        MYSQL_ROOT_PASSWORD = "root_password"  
+        MYSQL_ROOT_PASSWORD = "root_password"      
     }
 
     stages {
