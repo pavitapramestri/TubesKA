@@ -3,9 +3,9 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = "php:8.1-apache"
-        CONTAINER_ID = "427aaf0f0a3291c953a62b386fb80472da629e9faa41ce790a24fbaac95171aa"
+        CONTAINER_ID = "d17e7e66243eeef989582e214edd7e9b15cbb88e70cd612a3467e08d5dffa51b"
         APP_PORT = "8085:80"
-        MYSQL_CONTAINER_ID = "4cafadb2382a49543b14f050033857fc8a98a94c6a52481da8f4b11f523ece5d"
+        MYSQL_CONTAINER_ID = "295d5fc44cad1be141c9e1d254653e23fdd48c99d1c57ed3ecc407c6b061adce"
         MYSQL_IMAGE = "mysql:5.7"
         MYSQL_ROOT_PASSWORD = "root_password"
     }
@@ -20,7 +20,7 @@ pipeline {
         stage('Setup PHP Container') {
             steps {
                 script {
-                    echo "Container ID: 427aaf0f0a3291c953a62b386fb80472da629e9faa41ce790a24fbaac95171aa"
+                    echo "Container ID: d17e7e66243eeef989582e214edd7e9b15cbb88e70cd612a3467e08d5dffa51b"
                     
                     echo 'Verifying PHP container is running...'
                 }
@@ -30,7 +30,7 @@ pipeline {
         stage('Setup MySQL Container') {
             steps {
                 script {
-                    echo "Container ID: 4cafadb2382a49543b14f050033857fc8a98a94c6a52481da8f4b11f523ece5d"
+                    echo "Container ID: 295d5fc44cad1be141c9e1d254653e23fdd48c99d1c57ed3ecc407c6b061adce"
 
                     echo 'Verifying MySQL container is running...'
                 }
