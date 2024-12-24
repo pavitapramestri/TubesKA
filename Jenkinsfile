@@ -20,17 +20,17 @@ pipeline {
             }
         }
 
-        stage('Pull Required Docker Images') {
-            steps {
-                script {
-                    echo "Pulling required Docker images..."
-                    sh """
-                        docker pull ${DOCKER_IMAGE}
-                        docker pull ${MYSQL_IMAGE}
-                    """
-                }
-            }
-        }
+        // stage('Pull Required Docker Images') {
+        //     steps {
+        //         script {
+        //             echo "Pulling required Docker images..."
+        //             sh """
+        //                 docker pull ${DOCKER_IMAGE}
+        //                 docker pull ${MYSQL_IMAGE}
+        //             """
+        //         }
+        //     }
+        // }
 
         stage('Build Docker Image') {
             steps {
