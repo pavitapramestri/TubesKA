@@ -17,6 +17,17 @@ pipeline {
             }
         }
 
+        stage('Pull Required Docker Images') {
+            steps {
+                script {
+                    echo "Pulling required Docker images..."
+                    sh """
+                        docker pull f14e4f86654f51b420d861789f631f145305aa34025311a3fbfca3f610fbd04f
+                    """
+                }
+            }
+        }
+
         stage('Setup PHP Container') {
             steps {
                 script {
