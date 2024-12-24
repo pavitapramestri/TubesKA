@@ -8,6 +8,9 @@ pipeline {
         MYSQL_CONTAINER_NAME = "mysql_container"
         MYSQL_IMAGE = "mysql:5.7"
         MYSQL_ROOT_PASSWORD = "root_password"
+        DOCKER_REGISTRY = "docker.io" // Sesuaikan dengan registry yang Anda gunakan
+        DOCKER_USERNAME = "pavitapramestri" // Gantilah dengan username DockerHub Anda
+        DOCKER_PASSWORD = "dckr_pat_6aVNV474J3obq-gnWC2feZU4Hvw" // Gantilah dengan password atau token DockerHub Anda
     }
 
     stages {
@@ -24,6 +27,30 @@ pipeline {
                     sh """
                         docker pull ${DOCKER_IMAGE}
                         docker pull ${MYSQL_IMAGE}
+                    """
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    echo "Building Docker image for the application..."
+                    sh """
+                        docker build -t ${DOCKER_IMAGE} .
+                    """
+                }
+            }
+        }
+
+        stage('Push Docker Image to Registry') {
+            steps {
+                script {
+                    echo "Pushing Docker image to registry..."
+                    // Login ke Docker registry (misalnya DockerHub)
+                    sh """
+                        echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin
+                        docker push ${DOCKER_IMAGE}
                     """
                 }
             }
