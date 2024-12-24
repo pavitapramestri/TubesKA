@@ -2,10 +2,10 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "php:8.1-apache"
-        CONTAINER_ID = "427aaf0f0a3291c953a62b386fb80472da629e9faa41ce790a24fbaac95171aa"
+        DOCKER_IMAGE = "4s-moto-shop"
+        CONTAINER_NAME = "php_container"
         APP_PORT = "8085:80"
-        MYSQL_CONTAINER_ID = "4cafadb2382a49543b14f050033857fc8a98a94c6a52481da8f4b11f523ece5d"
+        MYSQL_CONTAINER_NAME = "mysql_container"
         MYSQL_IMAGE = "mysql:5.7"
         MYSQL_ROOT_PASSWORD = "root_password"
     }
@@ -17,31 +17,69 @@ pipeline {
             }
         }
 
-        stage('Setup PHP Container') {
+        stage('Pull Required Docker Images') {
             steps {
                 script {
-                    echo "Container ID: 427aaf0f0a3291c953a62b386fb80472da629e9faa41ce790a24fbaac95171aa"
+                    echo "Pulling required Docker images..."
+                    sh """
+                        docker pull ${DOCKER_IMAGE}
+                        docker pull ${MYSQL_IMAGE}
+                    """
+                }
+            }
+        }
+
+        stage('Run PHP Container') {
+            steps {
+                script {
+                    echo "Running PHP container..."
+                    sh """
+                        docker run -d --name ${CONTAINER_NAME} -p ${APP_PORT} ${DOCKER_IMAGE}
+                    """
                     
                     echo 'Verifying PHP container is running...'
+                    sh """
+                        docker ps | grep ${CONTAINER_NAME}
+                    """
                 }
             }
         }
-        
-        stage('Setup MySQL Container') {
+
+        stage('Run MySQL Container') {
             steps {
                 script {
-                    echo "Container ID: 4cafadb2382a49543b14f050033857fc8a98a94c6a52481da8f4b11f523ece5d"
-
+                    echo "Running MySQL container..."
+                    sh """
+                        docker run -d --name ${MYSQL_CONTAINER_NAME} -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} ${MYSQL_IMAGE}
+                    """
+                    
                     echo 'Verifying MySQL container is running...'
+                    sh """
+                        docker ps | grep ${MYSQL_CONTAINER_NAME}
+                    """
                 }
             }
         }
-        
+
+        stage('Test Application') {
+            steps {
+                script {
+                    echo "Testing application..."
+                    sh """
+                        curl -I http://localhost:${APP_PORT.split(':')[0]} || echo 'Application not reachable'
+                    """
+                }
+            }
+        }
     }
 
     post {
         always {
             echo 'Cleaning up Docker resources...'
+            sh """
+                docker stop ${CONTAINER_NAME} ${MYSQL_CONTAINER_NAME} || echo 'Containers already stopped'
+                docker rm ${CONTAINER_NAME} ${MYSQL_CONTAINER_NAME} || echo 'Containers already removed'
+            """
         }
     }
 }
