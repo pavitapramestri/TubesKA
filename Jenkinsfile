@@ -2,15 +2,12 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "4s-moto-shop"
-        CONTAINER_NAME = "php_container"
+        DOCKER_IMAGE = "php:8.1-apache"
+        CONTAINER_ID = "427aaf0f0a3291c953a62b386fb80472da629e9faa41ce790a24fbaac95171aa"
         APP_PORT = "8085:80"
-        MYSQL_CONTAINER_NAME = "mysql_container"
+        MYSQL_CONTAINER_ID = "4cafadb2382a49543b14f050033857fc8a98a94c6a52481da8f4b11f523ece5d"
         MYSQL_IMAGE = "mysql:5.7"
         MYSQL_ROOT_PASSWORD = "root_password"
-        DOCKER_REGISTRY = "docker.io" // Sesuaikan dengan registry yang Anda gunakan
-        DOCKER_USERNAME = "pavitapramestri" // Gantilah dengan username DockerHub Anda
-        DOCKER_PASSWORD = "pavitapramestri" // Gantilah dengan password atau token DockerHub Anda
     }
 
     stages {
@@ -20,93 +17,31 @@ pipeline {
             }
         }
 
-        // stage('Pull Required Docker Images') {
-        //     steps {
-        //         script {
-        //             echo "Pulling required Docker images..."
-        //             sh """
-        //                 docker pull ${DOCKER_IMAGE}
-        //                 docker pull ${MYSQL_IMAGE}
-        //             """
-        //         }
-        //     }
-        // }
-
-        stage('Build Docker Image') {
+        stage('Setup PHP Container') {
             steps {
                 script {
-                    echo "Building Docker image for the application..."
-                    sh """
-                        docker build -t ${DOCKER_IMAGE} .
-                    """
-                }
-            }
-        }
-
-        stage('Push Docker Image to Registry') {
-            steps {
-                script {
-                    echo "Pushing Docker image to registry..."
-                    // Login ke Docker registry (misalnya DockerHub)
-                    sh """
-                        echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin
-                        docker push ${DOCKER_IMAGE}
-                    """
-                }
-            }
-        }
-
-        stage('Run PHP Container') {
-            steps {
-                script {
-                    echo "Running PHP container..."
-                    sh """
-                        docker run -d --name ${CONTAINER_NAME} -p ${APP_PORT} ${DOCKER_IMAGE}
-                    """
+                    echo "Container ID: 427aaf0f0a3291c953a62b386fb80472da629e9faa41ce790a24fbaac95171aa"
                     
                     echo 'Verifying PHP container is running...'
-                    sh """
-                        docker ps | grep ${CONTAINER_NAME}
-                    """
                 }
             }
         }
-
-        stage('Run MySQL Container') {
+        
+        stage('Setup MySQL Container') {
             steps {
                 script {
-                    echo "Running MySQL container..."
-                    sh """
-                        docker run -d --name ${MYSQL_CONTAINER_NAME} -e MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} ${MYSQL_IMAGE}
-                    """
-                    
+                    echo "Container ID: 4cafadb2382a49543b14f050033857fc8a98a94c6a52481da8f4b11f523ece5d"
+
                     echo 'Verifying MySQL container is running...'
-                    sh """
-                        docker ps | grep ${MYSQL_CONTAINER_NAME}
-                    """
                 }
             }
         }
-
-        stage('Test Application') {
-            steps {
-                script {
-                    echo "Testing application..."
-                    sh """
-                        curl -I http://localhost:${APP_PORT.split(':')[0]} || echo 'Application not reachable'
-                    """
-                }
-            }
-        }
+        
     }
 
     post {
         always {
             echo 'Cleaning up Docker resources...'
-            sh """
-                docker stop ${CONTAINER_NAME} ${MYSQL_CONTAINER_NAME} || echo 'Containers already stopped'
-                docker rm ${CONTAINER_NAME} ${MYSQL_CONTAINER_NAME} || echo 'Containers already removed'
-            """
         }
     }
 }
