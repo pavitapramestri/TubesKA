@@ -4,7 +4,7 @@ services:
   php:
     image: php:8.1-apache
     ports:
-      - "8085:80"
+      - "8086:80"
     volumes:
       - ./:/var/www/html/
     depends_on:
@@ -24,7 +24,7 @@ services:
   mysql:
     image: mysql:5.7
     ports:
-      - "33065:3306"
+      - "3310:3306" 
     volumes:
       - devphp-mysql-data:/var/lib/mysql
       - ./cart_php.sql:/docker-entrypoint-initdb.d/cart_php.sql
